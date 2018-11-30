@@ -32,53 +32,44 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.opennms.features.apilayer.utils.ModelMappers;
-import org.opennms.integration.api.v1.model.EventParameter;
-import org.opennms.integration.api.v1.model.InMemoryEvent;
-import org.opennms.integration.api.v1.model.Severity;
-import org.opennms.netmgt.model.OnmsSeverity;
-import org.opennms.netmgt.xml.event.Event;
+import org.opennms.integration.api.v1.model.Node;
+import org.opennms.integration.api.v1.model.SnmpInterface;
+import org.opennms.netmgt.model.OnmsNode;
 
-import com.google.common.collect.ImmutableList;
+public class NodeImpl implements Node {
 
-public class InMemoryEventBean implements InMemoryEvent {
+    private final OnmsNode node;
+    private final List<SnmpInterface> snmpInterfaces;
 
-    private final Event event;
-    private final Severity severity;
-    private final List<EventParameter> parameters;
-
-    public InMemoryEventBean(Event event) {
-        this.event = Objects.requireNonNull(event);
-        this.severity = ModelMappers.toSeverity(OnmsSeverity.get(event.getSeverity()));
-        this.parameters = ImmutableList.copyOf(event.getParmCollection().stream()
-                .map(EventParameterBean::new)
-                .collect(Collectors.toList()));
-    }
-
-    @Override
-    public String getUei() {
-        return event.getUei();
-    }
-
-    @Override
-    public String getSource() {
-        return event.getSource();
-    }
-
-    @Override
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    @Override
-    public List<EventParameter> getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public List<EventParameter> getParametersByName(String name) {
-        return parameters.stream()
-                .filter(p -> Objects.equals(name, p.getName()))
+    public NodeImpl(OnmsNode node) {
+        this.node = Objects.requireNonNull(node);
+        this.snmpInterfaces = node.getSnmpInterfaces().stream()
+                .map(SnmpInterfaceImpl::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer getId() {
+        return node.getId();
+    }
+
+    @Override
+    public String getForeignSource() {
+        return node.getForeignSource();
+    }
+
+    @Override
+    public String getForeignId() {
+        return node.getForeignId();
+    }
+
+    @Override
+    public String getLabel() {
+        return node.getLabel();
+    }
+
+    @Override
+    public List<SnmpInterface> getSnmpInterfaces() {
+        return snmpInterfaces;
     }
 }

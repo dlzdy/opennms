@@ -45,11 +45,11 @@ import org.opennms.netmgt.model.OnmsAlarm;
 
 import com.google.common.collect.ImmutableMap;
 
-public class AlarmBean implements Alarm {
+public class AlarmImpl implements Alarm {
 
     private final OnmsAlarm alarm;
 
-    private final NodeBean node;
+    private final NodeImpl node;
 
     private final Map<String, String> attributes;
 
@@ -59,12 +59,12 @@ public class AlarmBean implements Alarm {
 
     private final DatabaseEvent lastEvent;
 
-    public AlarmBean(OnmsAlarm alarm) {
+    public AlarmImpl(OnmsAlarm alarm) {
         this.alarm = Objects.requireNonNull(alarm);
         this.attributes = alarm.getDetails() != null ? ImmutableMap.copyOf(alarm.getDetails()) : Collections.emptyMap();
-        this.node = alarm.getNode() != null ? new NodeBean(alarm.getNode()) : null;
+        this.node = alarm.getNode() != null ? new NodeImpl(alarm.getNode()) : null;
         this.severity = ModelMappers.toSeverity(alarm.getSeverity());
-        this.relatedAlarms = alarm.getRelatedAlarms().stream().map(AlarmBean::new).collect(Collectors.toList());
+        this.relatedAlarms = alarm.getRelatedAlarms().stream().map(AlarmImpl::new).collect(Collectors.toList());
         this.lastEvent = ModelMappers.toEvent(alarm.getLastEvent());
     }
 

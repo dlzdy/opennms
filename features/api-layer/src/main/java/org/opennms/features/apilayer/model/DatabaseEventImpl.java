@@ -28,32 +28,48 @@
 
 package org.opennms.features.apilayer.model;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.opennms.integration.api.v1.model.DatabaseEvent;
 import org.opennms.integration.api.v1.model.EventParameter;
-import org.opennms.netmgt.model.OnmsEventParameter;
-import org.opennms.netmgt.xml.event.Parm;
+import org.opennms.netmgt.model.OnmsEvent;
 
-public class EventParameterBean implements EventParameter {
+import com.google.common.collect.ImmutableList;
 
-    private final String name;
-    private final String value;
+public class DatabaseEventImpl implements DatabaseEvent {
 
-    public EventParameterBean(OnmsEventParameter p) {
-        name = p.getName();
-        value = p.getValue();
-    }
+    private final OnmsEvent event;
 
-    public EventParameterBean(Parm p) {
-        name = p.getParmName();
-        value = p.getValue() != null ? p.getValue().getContent() : null;
-    }
+    private final List<EventParameter> parameters;
 
-    @Override
-    public String getName() {
-        return name;
+    public DatabaseEventImpl(OnmsEvent event) {
+        this.event = Objects.requireNonNull(event);
+        this.parameters = ImmutableList.copyOf(event.getEventParameters().stream()
+                .map(EventParameterImpl::new)
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public String getValue() {
-        return value;
+    public String getUei() {
+        return event.getEventUei();
+    }
+
+    @Override
+    public Integer getId() {
+        return event.getId();
+    }
+
+    @Override
+    public List<EventParameter> getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public List<EventParameter> getParametersByName(String name) {
+        return parameters.stream()
+                .filter(p -> Objects.equals(name, p.getName()))
+                .collect(Collectors.toList());
     }
 }

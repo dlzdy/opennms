@@ -28,12 +28,14 @@
 
 package org.opennms.features.apilayer.utils;
 
-import org.opennms.features.apilayer.model.AlarmBean;
-import org.opennms.features.apilayer.model.DatabaseEventBean;
-import org.opennms.features.apilayer.model.InMemoryEventBean;
-import org.opennms.features.apilayer.model.NodeBean;
-import org.opennms.features.apilayer.model.SnmpInterfaceBean;
+import org.opennms.features.apilayer.model.AlarmFeedbackImpl;
+import org.opennms.features.apilayer.model.AlarmImpl;
+import org.opennms.features.apilayer.model.DatabaseEventImpl;
+import org.opennms.features.apilayer.model.InMemoryEventImpl;
+import org.opennms.features.apilayer.model.NodeImpl;
+import org.opennms.features.apilayer.model.SnmpInterfaceImpl;
 import org.opennms.integration.api.v1.model.Alarm;
+import org.opennms.integration.api.v1.model.AlarmFeedback;
 import org.opennms.integration.api.v1.model.DatabaseEvent;
 import org.opennms.integration.api.v1.model.EventParameter;
 import org.opennms.integration.api.v1.model.InMemoryEvent;
@@ -54,11 +56,11 @@ import org.opennms.netmgt.xml.event.Event;
 public class ModelMappers {
 
     public static Alarm toAlarm(OnmsAlarm alarm) {
-        return new AlarmBean(alarm);
+        return new AlarmImpl(alarm);
     }
 
     public static InMemoryEvent toEvent(Event event) {
-        return new InMemoryEventBean(event);
+        return new InMemoryEventImpl(event);
     }
 
     public static Event toEvent(InMemoryEvent event) {
@@ -76,21 +78,21 @@ public class ModelMappers {
         if (event == null) {
             return null;
         }
-        return new DatabaseEventBean(event);
+        return new DatabaseEventImpl(event);
     }
 
     public static Node toNode(OnmsNode node) {
         if (node == null) {
             return null;
         }
-        return new NodeBean(node);
+        return new NodeImpl(node);
     }
 
     public static SnmpInterface toSnmpInterface(OnmsSnmpInterface snmpInterface) {
         if (snmpInterface == null) {
             return null;
         }
-        return new SnmpInterfaceBean(snmpInterface);
+        return new SnmpInterfaceImpl(snmpInterface);
     }
 
     public static Severity toSeverity(OnmsSeverity severity) {
@@ -112,5 +114,9 @@ public class ModelMappers {
                 return Severity.CRITICAL;
         }
         return Severity.INDETERMINATE;
+    }
+    
+    public static AlarmFeedback toFeedback(org.opennms.features.situationfeedback.api.AlarmFeedback feedback) {
+        return feedback == null ? null : new AlarmFeedbackImpl(feedback);
     }
 }

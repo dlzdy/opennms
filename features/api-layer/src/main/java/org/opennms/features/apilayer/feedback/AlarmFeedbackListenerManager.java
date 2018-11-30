@@ -26,33 +26,31 @@
  *     http://www.opennms.com/
  *******************************************************************************/
 
-package org.opennms.features.apilayer.model;
+package org.opennms.features.apilayer.feedback;
 
-import java.util.Objects;
+import java.util.List;
 
-import org.opennms.integration.api.v1.model.SnmpInterface;
-import org.opennms.netmgt.model.OnmsSnmpInterface;
+import org.opennms.features.apilayer.utils.InterfaceMapper;
+import org.opennms.features.apilayer.utils.ModelMappers;
+import org.opennms.features.situationfeedback.api.AlarmFeedback;
+import org.opennms.features.situationfeedback.api.AlarmFeedbackListener;
+import org.osgi.framework.BundleContext;
 
-public class SnmpInterfaceBean implements SnmpInterface {
+public class AlarmFeedbackListenerManager extends InterfaceMapper<org.opennms.integration.api.v1.feedback.AlarmFeedbackListener, AlarmFeedbackListener> {
 
-    private final OnmsSnmpInterface snmpInterface;
-
-    public SnmpInterfaceBean(OnmsSnmpInterface snmpInterface) {
-        this.snmpInterface = Objects.requireNonNull(snmpInterface);
+    public AlarmFeedbackListenerManager(BundleContext bundleContext) {
+        super(AlarmFeedbackListener.class, bundleContext);
     }
 
     @Override
-    public String getIfDescr() {
-        return snmpInterface.getIfDescr();
-    }
-
-    @Override
-    public String getIfName() {
-        return snmpInterface.getIfName();
-    }
-
-    @Override
-    public Integer getIfIndex() {
-        return snmpInterface.getIfIndex();
+    public AlarmFeedbackListener map(org.opennms.integration.api.v1.feedback.AlarmFeedbackListener ext) {
+        return new AlarmFeedbackListener() {
+            @Override
+            public void handleAlarmFeedback(List<AlarmFeedback> alarmFeedback) {
+                alarmFeedback.stream()
+                        .map(ModelMappers::toFeedback)
+                        .forEach(ext::onFeedback);
+            }
+        };
     }
 }

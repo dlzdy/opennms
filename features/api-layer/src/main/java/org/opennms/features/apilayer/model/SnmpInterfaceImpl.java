@@ -26,18 +26,33 @@
  *     http://www.opennms.com/
  *******************************************************************************/
 
-package org.opennms.features.situationfeedback.api;
+package org.opennms.features.apilayer.model;
 
-import java.util.List;
+import java.util.Objects;
 
-/**
- * Implementations of this interface react to alarm feedback being generated.
- */
-public interface AlarmFeedbackListener {
-    /**
-     * Handle the newly generated collection of alarm feedback.
-     *
-     * @param alarmFeedback the collection of alarm feedback
-     */
-    void handleAlarmFeedback(List<AlarmFeedback> alarmFeedback);
+import org.opennms.integration.api.v1.model.SnmpInterface;
+import org.opennms.netmgt.model.OnmsSnmpInterface;
+
+public class SnmpInterfaceImpl implements SnmpInterface {
+
+    private final OnmsSnmpInterface snmpInterface;
+
+    public SnmpInterfaceImpl(OnmsSnmpInterface snmpInterface) {
+        this.snmpInterface = Objects.requireNonNull(snmpInterface);
+    }
+
+    @Override
+    public String getIfDescr() {
+        return snmpInterface.getIfDescr();
+    }
+
+    @Override
+    public String getIfName() {
+        return snmpInterface.getIfName();
+    }
+
+    @Override
+    public Integer getIfIndex() {
+        return snmpInterface.getIfIndex();
+    }
 }
