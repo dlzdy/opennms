@@ -33,6 +33,8 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
+//64 bytes from 61.135.169.125: tid=1234 icmp_seq=1 time=3.381 ms
+//64 bytes from 61.135.169.121: tid=1234 icmp_seq=7 time=4.734 ms
 
 /**
  * Main
@@ -46,6 +48,7 @@ public class Main {
     }
     
     public int execute(String[] args) throws Exception {
+    	args = new String[] {"www.baidu.com"};
         if (args.length < 1) {
             System.err.println("java -jar jna-jicmp-VERSION.jar <hostname or ip address>");
             return 1;

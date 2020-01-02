@@ -107,6 +107,6 @@ public abstract class AbstractPinger<T extends InetAddress> implements Runnable 
      PingReplyMetric ping(T addr4)  throws InterruptedException {
         Thread t = new Thread(this);
         t.start();
-        return ping(addr4, 1234, 1, 10, 1000);
+        return ping(addr4, 1234, 1, 3, 1000);
     }
 }

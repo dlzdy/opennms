@@ -5,6 +5,10 @@ eclipse import maven
 1.opennms-bootstrap
 2.opennms-webapp
 
+
+table
+  opennms\opennms-base-assembly\src\main\filtered\etc\create.sql
+
 [OpenNMS][] is the world's first enterprise grade network management application platform developed under the open source model.
 
 Well, what does that mean?
